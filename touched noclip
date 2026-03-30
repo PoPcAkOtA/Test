@@ -1,14 +1,12 @@
 local player = game.Players.LocalPlayer
-local mouse = player:GetMouse() -- Получаем мышку
 local runService = game:GetService("RunService")
-local UIS = game:GetService("UserInputService")
 
 local function createGui()
-    local oldGui = player.PlayerGui:FindFirstChild("GhostModeGui")
+    local oldGui = player.PlayerGui:FindFirstChild("SuperStatsGui")
     if oldGui then oldGui:Destroy() end
 
     local sg = Instance.new("ScreenGui")
-    sg.Name = "GhostModeGui"
+    sg.Name = "SuperStatsGui"
     sg.ResetOnSpawn = false
     sg.Parent = player:WaitForChild("PlayerGui")
 
@@ -17,67 +15,58 @@ local function createGui()
     btn.Position = UDim2.new(0, 50, 0.5, 0)
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Text = "OFF"
-    btn.BorderSizePixel = 2
-    btn.Parent = sg
+    btn.Text = "BOOST: OFF"
     btn.Font = Enum.Font.Montserrat
     btn.TextScaled = true
-    btn.Draggable = true 
+    btn.Draggable = true
+    btn.Parent = sg
     
     local active = false
 
     btn.MouseButton1Click:Connect(function()
         active = not active
+        local char = player.Character
+        local hum = char and char:FindFirstChildOfClass("Humanoid")
+
         if active then
-            btn.Text = "ON"
+            btn.Text = "BOOST: ON"
             btn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
         else
-            btn.Text = "OFF"
+            btn.Text = "BOOST: OFF"
             btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
-            
-            if player.Character then
-                local ff = player.Character:FindFirstChild("GhostFF")
-                if ff then ff:Destroy() end
-                
-                for _, p in pairs(player.Character:GetDescendants()) do
+            -- Сброс к стандартам
+            if hum then
+                hum.WalkSpeed = 16
+                hum.JumpPower = 50
+                hum.JumpHeight = 7.2
+            end
+            if char then
+                for _, p in pairs(char:GetDescendants()) do
                     if p:IsA("BasePart") then
                         p.CanTouch = true
                         p.CanQuery = true
-                        p.CanCollide = true
                     end
                 end
             end
         end
     end)
 
-    -- Телепорт на позицию мышки при нажатии E
-    UIS.InputBegan:Connect(function(input, gpe)
-        if not gpe and active and input.KeyCode == Enum.KeyCode.Q then
-            local char = player.Character
-            local root = char and char:FindFirstChild("HumanoidRootPart")
-            if root then
-                -- Устанавливаем позицию в точку, куда указывает мышка + небольшой подъем вверх (3 студа)
-                root.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
-            end
-        end
-    end)
-
+    -- Постоянный цикл для скорости, прыжка и Ghost Mode
     runService.Stepped:Connect(function()
         if active and player.Character then
-            -- ForceField
-            if not player.Character:FindFirstChild("GhostFF") then
-                local ff = Instance.new("ForceField")
-                ff.Name = "GhostFF"
-                ff.Visible = false
-                ff.Parent = player.Character
+            local hum = player.Character:FindFirstChildOfClass("Humanoid")
+            if hum then
+                hum.WalkSpeed = 300 -- Скорость 300
+                hum.JumpPower = 50  -- Сила прыжка 50
+                hum.JumpHeight = 50 -- На всякий случай для новых игр
             end
 
-            -- Ghost Mode / NoClip
+            -- Ghost Mode (чтобы не умирать на бегу от ловушек)
             for _, p in pairs(player.Character:GetDescendants()) do
                 if p:IsA("BasePart") then
                     p.CanTouch = false
                     p.CanQuery = false
-                    p.CanCollide = false
+                    -- CanCollide НЕ трогаем, чтобы ты не провалился на такой скорости
                 end
             end
         end
