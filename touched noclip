@@ -15,7 +15,7 @@ local function createGui()
     btn.Position = UDim2.new(0, 50, 0.5, 0)
     btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Text = "BOOST: OFF"
+    btn.Text = "Off"
     btn.Font = Enum.Font.Montserrat
     btn.TextScaled = true
     btn.Draggable = true
@@ -29,10 +29,10 @@ local function createGui()
         local hum = char and char:FindFirstChildOfClass("Humanoid")
 
         if active then
-            btn.Text = "Misha Gey"
+            btn.Text = "On"
             btn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
         else
-            btn.Text = "Misha ne Gey"
+            btn.Text = "Off"
             btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
             if hum then
                 hum.WalkSpeed = 16
