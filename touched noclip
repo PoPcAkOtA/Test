@@ -57,8 +57,8 @@ local function createGui()
             local hum = player.Character:FindFirstChildOfClass("Humanoid")
             if hum then
                 hum.WalkSpeed = 300 -- Скорость 300
-                hum.JumpPower = 50  -- Сила прыжка 50
-                hum.JumpHeight = 50 -- На всякий случай для новых игр
+                hum.JumpPower = 75  -- Сила прыжка 50
+                hum.JumpHeight = 75 -- На всякий случай для новых игр
             end
 
             -- Ghost Mode (чтобы не умирать на бегу от ловушек)
