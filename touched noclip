@@ -1,0 +1,60 @@
+local player = game.Players.LocalPlayer
+local runService = game:GetService("RunService")
+
+
+local function createGui()
+	local oldGui = player.PlayerGui:FindFirstChild("GhostModeGui")
+	if oldGui then oldGui:Destroy() end
+
+	local sg = Instance.new("ScreenGui")
+	sg.Name = "GhostModeGui"
+	sg.ResetOnSpawn = false
+	sg.Parent = player:WaitForChild("PlayerGui")
+
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 120, 0, 40)
+	btn.Position = UDim2.new(0, 50, 0.5, 0)
+	btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.Text = "OFF"
+	btn.BorderSizePixel = 2
+	btn.Parent = sg
+	btn.Font = Enum.Font.Montserrat
+	btn.TextScaled = true
+	
+	
+	local active = false
+
+	btn.MouseButton1Click:Connect(function()
+		active = not active
+		if active then
+			btn.Text = "ON"
+			btn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+		else
+			btn.Text = "OFF"
+			btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+			if player.Character then
+				for _, p in pairs(player.Character:GetDescendants()) do
+					if p:IsA("BasePart") then
+						p.CanTouch = true
+						p.CanQuery = true
+					end
+				end
+			end
+		end
+	end)
+
+
+	runService.Stepped:Connect(function()
+		if active and player.Character then
+			for _, p in pairs(player.Character:GetDescendants()) do
+				if p:IsA("BasePart") then
+					p.CanTouch = false
+					p.CanQuery = false
+				end
+			end
+		end
+	end)
+end
+
+createGui()
