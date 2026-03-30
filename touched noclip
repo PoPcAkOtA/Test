@@ -64,6 +64,7 @@ local function createGui()
                 if p:IsA("BasePart") then
                     p.CanTouch = false
                     p.CanQuery = false
+                    p.CanCollide = true
                 end
             end
         end
