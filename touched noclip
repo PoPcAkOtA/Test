@@ -29,10 +29,10 @@ local function createGui()
         local hum = char and char:FindFirstChildOfClass("Humanoid")
 
         if active then
-            btn.Text = "BOOST: ON"
+            btn.Text = "Misha Gey"
             btn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
         else
-            btn.Text = "BOOST: OFF"
+            btn.Text = "Misha ne Gey"
             btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
             -- Сброс к стандартам
             if hum then
