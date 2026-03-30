@@ -1,5 +1,7 @@
 local player = game.Players.LocalPlayer
+local mouse = player:GetMouse() -- Получаем мышку
 local runService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
 
 local function createGui()
     local oldGui = player.PlayerGui:FindFirstChild("GhostModeGui")
@@ -20,6 +22,7 @@ local function createGui()
     btn.Parent = sg
     btn.Font = Enum.Font.Montserrat
     btn.TextScaled = true
+    btn.Draggable = true 
     
     local active = false
 
@@ -32,12 +35,10 @@ local function createGui()
             btn.Text = "OFF"
             btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
             
-            -- Удаляем ForceField при выключении
-            if player.Character and player.Character:FindFirstChild("GhostFF") then
-                player.Character.GhostFF:Destroy()
-            end
-
             if player.Character then
+                local ff = player.Character:FindFirstChild("GhostFF")
+                if ff then ff:Destroy() end
+                
                 for _, p in pairs(player.Character:GetDescendants()) do
                     if p:IsA("BasePart") then
                         p.CanTouch = true
@@ -49,16 +50,29 @@ local function createGui()
         end
     end)
 
+    -- Телепорт на позицию мышки при нажатии E
+    UIS.InputBegan:Connect(function(input, gpe)
+        if not gpe and active and input.KeyCode == Enum.KeyCode.Q then
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if root then
+                -- Устанавливаем позицию в точку, куда указывает мышка + небольшой подъем вверх (3 студа)
+                root.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+            end
+        end
+    end)
+
     runService.Stepped:Connect(function()
         if active and player.Character then
+            -- ForceField
             if not player.Character:FindFirstChild("GhostFF") then
                 local ff = Instance.new("ForceField")
                 ff.Name = "GhostFF"
-                ff.Visible = true
+                ff.Visible = false
                 ff.Parent = player.Character
             end
 
-            -- Ghost Mode + NoClip (CanCollide false)
+            -- Ghost Mode / NoClip
             for _, p in pairs(player.Character:GetDescendants()) do
                 if p:IsA("BasePart") then
                     p.CanTouch = false
