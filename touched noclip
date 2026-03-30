@@ -34,7 +34,6 @@ local function createGui()
         else
             btn.Text = "Misha ne Gey"
             btn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
-            -- Сброс к стандартам
             if hum then
                 hum.WalkSpeed = 16
                 hum.JumpPower = 50
@@ -51,22 +50,20 @@ local function createGui()
         end
     end)
 
-    -- Постоянный цикл для скорости, прыжка и Ghost Mode
+
     runService.Stepped:Connect(function()
         if active and player.Character then
             local hum = player.Character:FindFirstChildOfClass("Humanoid")
             if hum then
-                hum.WalkSpeed = 300 -- Скорость 300
-                hum.JumpPower = 75  -- Сила прыжка 50
-                hum.JumpHeight = 75 -- На всякий случай для новых игр
+                hum.WalkSpeed = 300
+                hum.JumpPower = 75 
+                hum.JumpHeight = 75
             end
 
-            -- Ghost Mode (чтобы не умирать на бегу от ловушек)
             for _, p in pairs(player.Character:GetDescendants()) do
                 if p:IsA("BasePart") then
                     p.CanTouch = false
                     p.CanQuery = false
-                    -- CanCollide НЕ трогаем, чтобы ты не провалился на такой скорости
                 end
             end
         end
