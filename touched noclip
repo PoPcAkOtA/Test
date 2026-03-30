@@ -51,11 +51,10 @@ local function createGui()
 
     runService.Stepped:Connect(function()
         if active and player.Character then
-            -- Проверка и создание невидимого ForceField
             if not player.Character:FindFirstChild("GhostFF") then
                 local ff = Instance.new("ForceField")
                 ff.Name = "GhostFF"
-                ff.Visible = false -- Делаем его невидимым для беспалевности
+                ff.Visible = true
                 ff.Parent = player.Character
             end
 
